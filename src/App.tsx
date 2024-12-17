@@ -60,10 +60,12 @@ function App() {
     const habitsdata = localStorage.getItem('habits')
     const yeardata = localStorage.getItem('year')
     const monthdata = localStorage.getItem('month')
-    const habitsarray = JSON.parse(habitsdata || "");
+    if(habitsdata){
+      const habitsarray = JSON.parse(habitsdata || "");
+      setHabits(habitsarray)
+    }
     setYear(yeardata || "")
     setMonth(monthdata || "")
-    setHabits(habitsarray)
   },[])
 
   const changeHabit = (index:number, habit:string) => {
