@@ -83,7 +83,7 @@ function App() {
 
   return (
     <>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-black py-3">
         <div className="bg-slate-200 flex flex-col md:flex-row justify-between items-center py-4 px-4 md:px-8 rounded-md">
           <h1 className="text-black text-4xl md:text-6xl font-serif text-center md:text-left mb-4 md:mb-0">Habit Tracker</h1>
           <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
