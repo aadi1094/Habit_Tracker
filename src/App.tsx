@@ -8,7 +8,7 @@ function App() {
     habit: string;
     checkboxes: boolean[];
   }[]>([
-    ...Array(10).fill({
+    ...Array(6).fill({
       habit: "",
       checkboxes: new Array(31).fill(false),
     }),
@@ -33,12 +33,13 @@ function App() {
     setHabits(
       habits.map((item, i) => {
         if (i === index) {
-          item.habit = habit;
+          return { ...item, habit }; // Create a new object for the updated habit
         }
-        return item;
+        return item; // Return the other habits unchanged
       })
     );
   };
+  
 
   const tikHabit = (index: number, day: number) => {
     setHabits(
@@ -81,9 +82,23 @@ function App() {
     );
   }
 
+  const addHabit=()=>{
+    const newHabit={
+      habit: "",
+      checkboxes:new Array(31).fill(false)
+    }
+    setHabits([...habits, newHabit])
+  }
+
+  const deleteHabit = (index:number) => {
+    setHabits(habits.filter((item, i)=>{
+      return i != index
+    }))
+  }
+
   return (
     <>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-black py-3">
+      <div className="w-full  px-4 sm:px-6 lg:px-8 bg-blue-800 py-3">
         <div className="bg-slate-200 flex flex-col md:flex-row justify-between items-center py-4 px-4 md:px-8 rounded-md">
           <h1 className="text-black text-4xl md:text-6xl font-serif text-center md:text-left mb-4 md:mb-0">Habit Tracker</h1>
           <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
@@ -122,8 +137,13 @@ function App() {
               index={index}
               changeHabit={changeHabit}
               habit={habit}
+              deleteHabit={deleteHabit}
             />
           ))}
+          
+        <div className='flex justify-center items-center  w-full '>
+          <button className='text text-white bg-indigo-500 px-6 py-4 rounded-md text-2xl'onClick={addHabit}>Add Habit</button>
+        </div>
         </div>
       </div>
     </>

@@ -4,6 +4,7 @@ const Habit = ({
   changeHabit,
   index,
   tikHabit,
+  deleteHabit
 }: {
   habit: {
     habit: string;
@@ -12,6 +13,8 @@ const Habit = ({
   changeHabit: (index: number, habit: string) => void;
   index: number;
   tikHabit: (index: number, day: number) => void;
+  
+  deleteHabit: (index: number) => void;
 }) => {
   return (
     <div className="bg-gradient-to-br from-gray-100 to-gray-300 border shadow-xl flex flex-col items-start p-4 rounded-md">
@@ -26,14 +29,21 @@ const Habit = ({
           <div key={d} className="text-center">
             <label className="block text-sm ">{d + 1}</label>
             <input
-              onClick={() => tikHabit(index, d)}
+              onChange={() => tikHabit(index, d)}
               checked={val}
               type="checkbox"
               className="w-5 h-5 accent-black"
             />
-          </div>
+          </div>  
         ))}
       </div>
+      
+      <div className="flex justify-center items-center  w-full ">
+      <button onClick={()=>{
+        deleteHabit(index)
+      }} className="px-4 py-2 bg-red-500 rounded-md ">Delete</button>
+      </div>
+      
     </div>
   );
 };
