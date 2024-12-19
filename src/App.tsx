@@ -91,7 +91,7 @@ function App() {
   }
 
   const deleteHabit = (index:number) => {
-    setHabits(habits.filter((item, i)=>{
+    setHabits(habits.filter((_, i)=>{
       return i != index
     }))
   }
