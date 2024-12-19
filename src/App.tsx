@@ -1,145 +1,133 @@
-import { useEffect, useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
-import Habit from './component/Habit'
+import { useEffect, useState } from 'react';
+import './App.css';
+import Habit from './component/Habit';
 
 function App() {
+  const [loading, setLoading] = useState(false);
   const [habits, setHabits] = useState<{
-    habit:string,
-    checkboxes:boolean[]
+    habit: string;
+    checkboxes: boolean[];
   }[]>([
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-    {
-      habit:"",
-      checkboxes:new Array(31).fill(false)
-    },
-  ])
-
+    ...Array(10).fill({
+      habit: "",
+      checkboxes: new Array(31).fill(false),
+    }),
+  ]);
 
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
 
-
-  useEffect(()=>{
-    const habitsdata = localStorage.getItem('habits')
-    const yeardata = localStorage.getItem('year')
-    const monthdata = localStorage.getItem('month')
-    if(habitsdata){
+  useEffect(() => {
+    const habitsdata = localStorage.getItem('habits');
+    const yeardata = localStorage.getItem('year');
+    const monthdata = localStorage.getItem('month');
+    if (habitsdata) {
       const habitsarray = JSON.parse(habitsdata || "");
-      setHabits(habitsarray)
+      setHabits(habitsarray);
     }
-    setYear(yeardata || "")
-    setMonth(monthdata || "")
-  },[])
+    setYear(yeardata || "");
+    setMonth(monthdata || "");
+  }, []);
 
-  const changeHabit = (index:number, habit:string) => {
-      setHabits(habits.map((item, i) => {
-        if(i == index){
-          item.habit = habit
+  const changeHabit = (index: number, habit: string) => {
+    setHabits(
+      habits.map((item, i) => {
+        if (i === index) {
+          item.habit = habit;
         }
-        return item
-      }))  
-  }
+        return item;
+      })
+    );
+  };
 
-  const tikHabit = (index:number, day: number) => {
-    setHabits(habits.map((item, i) => {
-      if(i == index){
-        const updatedCheckboxes = item.checkboxes.map((checkbox, d) => {
-          if(d == day){
-            return !checkbox
-          }
-          console.log(item.checkboxes);          
-          return checkbox
-        })
+  const tikHabit = (index: number, day: number) => {
+    setHabits(
+      habits.map((item, i) => {
+        if (i === index) {
+          const updatedCheckboxes = item.checkboxes.map((checkbox, d) => {
+            if (d === day) {
+              return !checkbox;
+            }
+            return checkbox;
+          });
 
-        return {...item, checkboxes: updatedCheckboxes}
-      }
-      return item
-    })) 
-  }
+          return { ...item, checkboxes: updatedCheckboxes };
+        }
+        return item;
+      })
+    );
+  };
 
   const saveHabits = () => {
     localStorage.setItem('habits', JSON.stringify(habits));
     localStorage.setItem('year', year);
     localStorage.setItem('month', month);
+  };
+
+  const loadingFunction = () => {
+    setLoading(true);
+    saveHabits();
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-300 grid place-items-center">
+        <div className="w-8 h-8 border-4 border-blue-500 rounded-full border-b-transparent animate-spin"></div>
+      </div>
+    );
   }
 
   return (
     <>
-      <div>
-        <div className='bg-slate-200 flex justify-between items-center pr-44'>
-          <div>
-            <h1 className='text text-black text-6xl font-serif'>Habit Tracker</h1>
-          </div>
-          <div className='space-y-1'>
-            <div className=''>
-              <h1>Year:
-                 <input value={year} className='m-2 rounded-sm border border-blue-400 w-24' type="text" onChange={(e)=>{
-                  setYear(e.target.value)
-                 }} /> 
-              </h1>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-slate-200 flex flex-col md:flex-row justify-between items-center py-4 px-4 md:px-8 rounded-md">
+          <h1 className="text-black text-4xl md:text-6xl font-serif text-center md:text-left mb-4 md:mb-0">Habit Tracker</h1>
+          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+            <div className="flex items-center">
+              <label className="mr-2">Year:</label>
+              <input
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="rounded-sm border border-blue-400 w-20 md:w-24 px-2 py-1"
+                type="text"
+              />
             </div>
-            <div>
-              <h1>Month:
-                <input value={month} onChange={(e)=>{
-                  setMonth(e.target.value)
-                 }} className='m-2 rounded-sm border border-blue-400 w-32' type="text" />
-              </h1>
+            <div className="flex items-center">
+              <label className="mr-2">Month:</label>
+              <input
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
+                className="rounded-sm border border-blue-400 w-28 md:w-32 px-2 py-1"
+                type="text"
+              />
             </div>
           </div>
-          <button className='p-3 text-white bg-green-500 rounded-lg' onClick={saveHabits}>Save</button>
+          <button
+            className="p-2 md:p-3 text-white bg-green-500 rounded-lg mt-4 md:mt-0"
+            onClick={loadingFunction}
+          >
+            Save
+          </button>
         </div>
-        
-        {
-          habits.map((habit, index)=>{
-            return (
-              <Habit tikHabit={tikHabit} key={index} index={index} changeHabit={changeHabit} habit={habit} />
-            )
-          })
-        }
-        
-        
+
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {habits.map((habit, index) => (
+            <Habit
+              tikHabit={tikHabit}
+              key={index}
+              index={index}
+              changeHabit={changeHabit}
+              habit={habit}
+            />
+          ))}
+        </div>
       </div>
     </>
-  )
+  );
 }
 
-
-
-export default App
+export default App;
