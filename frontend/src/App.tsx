@@ -92,13 +92,6 @@ function App() {
     }
   };
 
-  const loadingFunction = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  };
-
   const numericYear = Number(year) || new Date().getFullYear();
   const numericMonth = Number(month) || new Date().getMonth() + 1;
   const daysInMonth = getDaysInMonth(numericYear, numericMonth - 1);
@@ -263,41 +256,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#fef6f6]">
-      <header className="border-b border-rose-200 bg-[#f7d7d7]">
-        <div className="w-full px-6 lg:px-10 py-5 flex flex-col gap-3">
+      <header className="border-b border-rose-200 bg-gradient-to-r from-rose-100 via-rose-50 to-orange-50">
+        <div className="w-full px-6 lg:px-10 py-6 flex flex-col gap-2">
           <div className="text-center">
-            <p className="text-xs tracking-[0.25em] uppercase text-rose-700">
-              Daily Habit Tracker
-            </p>
+            <p className="text-xs tracking-[0.25em] uppercase text-rose-700">Daily Habit Tracker</p>
             <h1 className="mt-1 text-2xl sm:text-3xl md:text-4xl font-semibold text-rose-900">
               Your habits will determine your future!
             </h1>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center gap-2 bg-[#fde9e9] rounded-md px-3 py-2 border border-rose-200">
-              <span className="text-xs font-medium text-rose-700">Year</span>
-              <input
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="rounded border border-rose-300 bg-white px-2 py-1 text-xs w-20 focus:outline-none focus:ring-2 focus:ring-rose-300"
-                type="number"
-              />
-              <span className="text-xs font-medium text-rose-700">Month</span>
-              <input
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-                className="rounded border border-rose-300 bg-white px-2 py-1 text-xs w-16 focus:outline-none focus:ring-2 focus:ring-rose-300"
-                type="number"
-                min={1}
-                max={12}
-              />
-            </div>
-            <button
-              className="px-4 py-2 rounded-md bg-rose-500 text-white text-xs font-semibold shadow-sm hover:bg-rose-600 transition-colors"
-              onClick={loadingFunction}
-            >
-              Save period
-            </button>
+            <p className="mt-2 text-sm text-rose-700/80">
+              Plan the month, tick your days, and watch the streak climb.
+            </p>
           </div>
         </div>
       </header>
@@ -305,7 +273,7 @@ function App() {
       <main className="w-full px-6 lg:px-10 py-6">
         <section className="flex flex-col lg:flex-row gap-8">
           <aside className="w-full lg:w-64 border-r border-rose-200 pr-0 lg:pr-6 lg:mr-6">
-            <div className="border border-rose-200 rounded-md px-4 py-3 mb-6 text-center bg-white">
+            <div className="border border-rose-200 rounded-md px-4 py-3 mb-4 text-center bg-white">
               <p className="text-xs text-rose-700">Month</p>
               <p className="mt-1 text-base font-semibold text-rose-900">
                 {new Date(numericYear, numericMonth - 1).toLocaleString('default', {
