@@ -7,6 +7,7 @@ import {
   createHabitApi,
   deleteHabitApi,
   completeHabitApi,
+  updateHabitApi,
 } from './api/client';
 
 const getDaysInMonth = (year: number, monthIndex: number) => {
@@ -46,6 +47,22 @@ function App() {
     );
   };
 
+  const saveHabitName = async (index: number, name: string) => {
+    const habit = habits[index];
+    const trimmed = name.trim();
+    if (!habit || !trimmed) return;
+
+    try {
+      const updated = await updateHabitApi(habit._id, { name: trimmed });
+      setHabits((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, ...updated, name: trimmed } : item)),
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to update habit name', error);
+    }
+  };
+
   const tikHabit = async (index: number, day: number) => {
     const habit = habits[index];
     if (!habit) return;
@@ -58,7 +75,17 @@ function App() {
 
     try {
       const updated = await completeHabitApi(habit._id, date);
-      setHabits((prev) => prev.map((item, i) => (i === index ? updated : item)));
+      setHabits((prev) =>
+        prev.map((item, i) =>
+          i === index
+            ? {
+                ...item,
+                ...updated,
+                name: item.name, // keep the latest edited name even if the API response has stale data
+              }
+            : item,
+        ),
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to complete habit', error);
@@ -485,6 +512,7 @@ function App() {
                           placeholder="Habit name"
                           value={habit.name}
                           onChange={(e) => changeHabit(index, e.target.value)}
+                          onBlur={(e) => saveHabitName(index, e.target.value)}
                         />
                       </div>
                       <div

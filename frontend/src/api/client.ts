@@ -105,6 +105,26 @@ export const deleteHabitApi = async (id: string): Promise<void> => {
   }
 };
 
+export const updateHabitApi = async (
+  id: string,
+  updates: Partial<Pick<HabitDto, 'name' | 'description' | 'frequency' | 'isArchived'>>,
+): Promise<HabitDto> => {
+  const res = await fetch(`${API_BASE_URL}/api/habits/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to update habit');
+  }
+
+  return res.json();
+};
+
 export const completeHabitApi = async (id: string, date: string): Promise<HabitDto> => {
   const res = await fetch(`${API_BASE_URL}/api/habits/${id}/complete`, {
     method: 'POST',
