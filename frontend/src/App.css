@@ -21,3 +21,25 @@ button:hover {
 .tracker-container button[type='button']:hover {
   transform: translateY(-1px);
 }
+
+.tracker-shell {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.tracker-scroll {
+  overflow-x: auto;
+}
+
+.tracker-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  min-width: max-content;
+}
+
+.tracker-body {
+  min-width: max-content;
+}

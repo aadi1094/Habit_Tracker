@@ -75,6 +75,8 @@ function App() {
   const numericYear = Number(year) || new Date().getFullYear();
   const numericMonth = Number(month) || new Date().getMonth() + 1;
   const daysInMonth = getDaysInMonth(numericYear, numericMonth - 1);
+  const dayCellWidth = 28;
+  const gridTemplate = `minmax(170px, 1fr) minmax(${daysInMonth * dayCellWidth}px, 3fr) minmax(76px, 0.35fr)`;
 
   const dailyCompletions = Array.from({ length: daysInMonth }).map((_, d) => {
     const date = new Date(numericYear, numericMonth - 1, d + 1).toISOString().slice(0, 10);
@@ -440,13 +442,13 @@ function App() {
               </button>
             </div>
 
-            <div className="border border-rose-100 rounded-md overflow-hidden tracker-container overflow-x-auto max-h-[420px] overflow-y-auto">
-              <div className="bg-[#fbe2e2] border-b border-rose-200 text-[10px] text-rose-900 tracker-header">
-                <div className="grid grid-cols-[minmax(110px,0.6fr)_1fr_auto] min-w-max">
+            <div className="border border-rose-100 rounded-md tracker-shell bg-white">
+              <div className="tracker-scroll overflow-x-auto">
+                <div className="bg-[#fbe2e2] border-b border-rose-200 text-[10px] text-rose-900 tracker-header-row" style={{ gridTemplateColumns: gridTemplate }}>
                   <div className="px-3 py-2 font-semibold border-r border-rose-200">Habit</div>
                   <div
                     className="px-2 py-2 grid gap-[2px]"
-                    style={{ gridTemplateColumns: `repeat(${daysInMonth}, 1.25rem)` }}
+                    style={{ gridTemplateColumns: `repeat(${daysInMonth}, ${dayCellWidth}px)` }}
                   >
                     {Array.from({ length: daysInMonth }).map((_, d) => {
                       const dateObj = new Date(numericYear, numericMonth - 1, d + 1);
@@ -463,68 +465,69 @@ function App() {
                   </div>
                   <div className="px-3 py-2" />
                 </div>
-              </div>
 
-              <div className="bg-white">
-                {habits.length === 0 && (
-                  <div className="px-4 py-6 text-center text-xs text-slate-500">
-                    No habits yet. Use &ldquo;Add habit&rdquo; to start tracking.
-                  </div>
-                )}
-
-                {habits.map((habit, index) => (
-                  <div
-                    key={habit._id}
-                    className="grid grid-cols-[minmax(110px,0.6fr)_1fr_auto] min-w-max border-t border-rose-100 text-[11px]"
-                  >
-                    <div className="px-3 py-1 flex flex-col justify-center gap-1 border-r border-rose-100">
-                      <input
-                        className="rounded border border-rose-200 bg-[#fff9f9] px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-rose-300"
-                        placeholder="Habit name"
-                        value={habit.name}
-                        onChange={(e) => changeHabit(index, e.target.value)}
-                      />
+                <div className="tracker-body max-h-[420px] overflow-y-auto">
+                  {habits.length === 0 && (
+                    <div className="px-4 py-6 text-center text-xs text-slate-500">
+                      No habits yet. Use &ldquo;Add habit&rdquo; to start tracking.
                     </div>
+                  )}
+
+                  {habits.map((habit, index) => (
                     <div
-                      className="px-2 py-1 grid gap-[2px]"
-                      style={{ gridTemplateColumns: `repeat(${daysInMonth}, 1.25rem)` }}
+                      key={habit._id}
+                      className="grid border-b border-rose-100 text-[11px]"
+                      style={{ gridTemplateColumns: gridTemplate }}
                     >
-                      {Array.from({ length: daysInMonth }).map((_, d) => {
-                        const date = new Date(
-                          numericYear,
-                          numericMonth - 1,
-                          d + 1,
-                        )
-                          .toISOString()
-                          .slice(0, 10);
-                        const isChecked = habit.completedDates.includes(date);
-                        return (
-                          <button
-                            key={d}
-                            type="button"
-                            onClick={() => tikHabit(index, d)}
-                            className={`w-5 h-5 border rounded-sm flex items-center justify-center text-[9px] ${
-                              isChecked
-                                ? 'bg-[#f9a8a8] border-[#f97373] text-white'
-                                : 'bg-white border-rose-200 text-transparent hover:bg-rose-50'
-                            }`}
-                          >
-                            ✓
-                          </button>
-                        );
-                      })}
-                    </div>
-                    <div className="px-3 py-1 flex items-center justify-center">
-                      <button
-                        type="button"
-                        onClick={() => deleteHabit(index)}
-                        className="px-2 py-0.5 rounded border border-rose-200 bg-rose-50 text-[10px] text-rose-700 hover:bg-rose-100 whitespace-nowrap"
+                      <div className="px-3 py-1 flex flex-col justify-center gap-1 border-r border-rose-100 bg-white">
+                        <input
+                          className="rounded border border-rose-200 bg-[#fff9f9] px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-rose-300"
+                          placeholder="Habit name"
+                          value={habit.name}
+                          onChange={(e) => changeHabit(index, e.target.value)}
+                        />
+                      </div>
+                      <div
+                        className="px-2 py-1 grid gap-[2px] bg-white"
+                        style={{ gridTemplateColumns: `repeat(${daysInMonth}, ${dayCellWidth}px)` }}
                       >
-                        Delete
-                      </button>
+                        {Array.from({ length: daysInMonth }).map((_, d) => {
+                          const date = new Date(
+                            numericYear,
+                            numericMonth - 1,
+                            d + 1,
+                          )
+                            .toISOString()
+                            .slice(0, 10);
+                          const isChecked = habit.completedDates.includes(date);
+                          return (
+                            <button
+                              key={d}
+                              type="button"
+                              onClick={() => tikHabit(index, d)}
+                              className={`w-7 h-7 border rounded-sm flex items-center justify-center text-[9px] transition-colors ${
+                                isChecked
+                                  ? 'bg-[#f9a8a8] border-[#f97373] text-white shadow-[0_1px_2px_rgba(0,0,0,0.08)]'
+                                  : 'bg-white border-rose-200 text-transparent hover:bg-rose-50'
+                              }`}
+                            >
+                              ✓
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div className="px-3 py-1 flex items-center justify-center bg-white border-l border-rose-100">
+                        <button
+                          type="button"
+                          onClick={() => deleteHabit(index)}
+                          className="px-2 py-0.5 rounded border border-rose-200 bg-rose-50 text-[10px] text-rose-700 hover:bg-rose-100 whitespace-nowrap"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </section>
